@@ -1,0 +1,194 @@
+\documentclass[12pt, a4paper]{article}
+
+\usepackage[brazilian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\usepackage[section]{minted}
+\usepackage{amsthm}
+
+\usepackage[colorlinks=true]{hyperref}
+\usepackage{color}
+
+\title{Lista - Algoritmos e Estrutura de Dados}
+\author{J Carlos Viana F}
+\date{}
+
+\definecolor{bg}{rgb}{0.95,0.95,0.95}
+
+\newmintedfile[ccode]{c}{
+bgcolor=bg,
+fontfamily=tt,
+linenos=true,
+numberblanklines=true,
+numbersep=12pt,
+numbersep=5pt,
+gobble=0,
+frame=leftline,
+framerule=0.4pt,
+framesep=2mm,
+funcnamehighlighting=true,
+tabsize=4,
+obeytabs=false,
+mathescape=false
+samepage=false, %with this setting you can force the list to appear on the same page
+showspaces=false,
+showtabs =false,
+texcl=false,
+}
+
+\newmintedfile[haskellcode]{haskell}{
+bgcolor=bg,
+fontfamily=tt,
+linenos=true,
+numberblanklines=true,
+numbersep=12pt,
+numbersep=5pt,
+gobble=0,
+frame=leftline,
+framerule=0.4pt,
+framesep=2mm,
+funcnamehighlighting=true,
+tabsize=4,
+obeytabs=false,
+mathescape=false
+samepage=false, %with this setting you can force the list to appear on the same page
+showspaces=false,
+showtabs =false,
+texcl=false,
+}
+
+\begin{document}
+
+% título
+\makeatletter
+\begin{center}
+
+\texttt{\Large \@title}
+\end{center}
+
+\emph{Aluno: \@author.}
+\makeatother
+
+% questões
+
+\begin{enumerate}
+
+\item (resposta)
+
+
+$f(n) = 2n^{2}+3n+4$ é $\mathcal{O}(n^{2})$; logo $g(n)=n^{2}$
+
+$2n^{2}+3n+4 \leq cn^{2}$\\
+$2n^{2}+3n+4 \leq 4n^{2}$
+
+$f(n)=\mathcal{O}(n^{2})$,\\
+$c=4$ e $n_{0}=3$
+
+\item (resposta)
+
+$f(n)=n^{3}$ é $\mathcal{O}(n^{2})$; $g(n)=n^{2}$
+
+$n^{3} \leq cn^{2}$
+
+não há $c$ e $n_{0}$ tal que $n^{3} \leq cn^{2}$\\
+Logo $f(n)$ não é $\mathcal{O}(n^{2})$
+
+\item (resposta)
+
+$f(n)=2^{n+1}$ é $\mathcal{O}(2^{n})$; $g(n)=2^{n}$
+
+$2^{n+1} \leq c2^{n}$\\
+$2^{n+1} \leq 2.2^{n}$\\
+$2^{n+1} \leq 2^{n+1}$
+
+$f(n)=\mathcal{O}(2^{n})$,\\
+$c=2$ e $n_{0}=1$
+
+\item (resposta)
+
+$T(n)=1+T(n-1)$
+$=1+1+T(n-2)$
+$=2+T(n-2)$
+$=2+1+T(n-3)$
+$=3+T(n-3)$
+
+$T(n)=k+T(n-k)$\\
+para $k=n-1$ temos\\
+$T(n)=n-1+T(1)$\\
+Logo, a busca linear/sequencial é $\mathcal{O}(n)$
+
+\item (resposta)
+
+$T(n)=1+T(\frac{n}{2})=1+1+T(\frac{n}{4})$
+$=2+T(\frac{n}{4})=2+1+T(\frac{n}{8})$
+$=3+T(\frac{n}{8})$
+
+$T(n)=k+T(\frac{n}{2^{k}})$\\
+$2^{k}=n \Rightarrow \log_{2}2^{k}=\log_{2}n \Rightarrow k=\log_{2}n$\\
+$T(n)=\log_{2}n+T(1)$\\
+Logo, a busca binária é $\mathcal{O}(\log n)$
+
+\item (resposta)
+
+$T(n)=n+2T(\frac{n}{2})=n+2[\frac{n}{2}+2T(\frac{n}{4})]$
+$=n+n+4T(\frac{n}{4})=2n+4T(\frac{n}{4})=2n+4[\frac{n}{4}+2T(\frac{n}{8})]$
+$=3n+8T(\frac{n}{8})$
+
+$T(n)=kn+2^{k}T(\frac{n}{2^{k}})$\\
+$2^{k}=n \Rightarrow \log_{2}2^{k}=\log_{2}n \Rightarrow k=\log_{2}n$\\
+$T(n)=n\log_{2}n + nT(1)$
+De modo que o \textit{quicksort} é $\mathcal{O}(n\log n)$
+
+\item (resposta)
+
+$f(n)+g(n)=\mathcal{O}(max\{f(n),g(n)\})$
+
+$f(n) \leq c_{1}h(n)$\\
+$g(n) \leq c_{2}h(n)$
+
+$f(n)+g(n) \leq c_{1}h(n)+c_{2}h(n)$\\
+$f(n)+g(n) \leq (c_{1}+c_{2})h(n)$\\
+$f(n)+g(n) \leq d.h(n)$, sendo $d = c_{1}+c_{2}$\\
+$f(n)+g(n) \leq d.\mathcal{O}(max\{f(n),g(n)\})$
+
+$f(n)+g(n)=\mathcal{O}(max\{f(n),g(n)\})$ para $d = c_{1}+c_{2}$ e um dado $n_{0}$
+
+\item (resposta)
+
+Para o \textit{merge}:
+
+\ccode{cod/08.1.1.c}
+\ccode[firstnumber=20]{cod/08.1.2.c}
+
+Para o \textit{mergesort} (não é alterado):
+
+\ccode[firstnumber=33]{cod/08.2.c}
+
+\item (resposta)
+
+\ccode{cod/09.1.c}
+\ccode[firstnumber=9]{cod/09.2.c}
+
+\item (resposta)
+
+\haskellcode{cod/10.hs}
+
+\item (resposta)
+
+\haskellcode{cod/11.hs}
+
+\item (resposta)
+
+\haskellcode{cod/12.hs}
+
+\item (resposta)
+
+\haskellcode{cod/13.hs}
+
+
+
+\end{enumerate}
+
+
+\end{document}

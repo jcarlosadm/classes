@@ -1,0 +1,10 @@
+Executar scripts em haskell:
+
+digite no terminal:
+ghci
+
+carregue o script:
+:load /caminho/para/o/script
+
+digite a função:
+funcao parametros
