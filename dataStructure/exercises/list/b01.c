@@ -11,77 +11,80 @@ struct node{
     int item;
     Node* previousNode;
     Node* nextNode;
-    int sentinel;
 };
 
 Node* createCircularList(){
-    return NULL;
+
+    // aloca sentinela
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    if(!newNode) return NULL;
+    
+    newNode->nextNode = newNode;
+    newNode->previousNode = newNode;
+    
+    return newNode;
 }
 
-Node* insertCircularNode(Node* first, int item){
+int insertCircularNode(Node* sentinel, int item){
     
-    Node* newNode = NULL;
-    newNode = (Node*)malloc(sizeof(Node));
-    if(!newNode) return first;
+    if(sentinel==NULL) return 0;
+    
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    if(!newNode) return 0;
     
     newNode->item = item;
-    newNode->sentinel = 1;
+    newNode->nextNode = sentinel->nextNode;
+    newNode->previousNode = sentinel;
     
-    if(first==NULL){
-        newNode->nextNode = newNode;
-        newNode->previousNode = newNode;
-        return newNode;
-    }
+    sentinel->nextNode->previousNode = newNode;
+    sentinel->nextNode = newNode;
     
-    newNode->nextNode = first;
-    newNode->previousNode = first->previousNode;
-    first->previousNode = newNode;
-    newNode->previousNode->nextNode = newNode;
-    return newNode;
+    return 1;
     
 }
 
-Node* freeCircularList(Node* current, Node *first){
-    if(current==NULL)
-        return NULL;
-    if(current==first){
-        if(current->sentinel==1){
-            current->sentinel=0;
-            current->nextNode = freeCircularList(current->nextNode,first);
+Node* freeListRec(Node* current, Node* sentinel){
+    if(current != sentinel){
+        if(current->nextNode!= sentinel){
+            current = current->nextNode;
+            free(current->previousNode);
+            return freeListRec(current,sentinel);
+        }else{
             free(current);
             return NULL;
         }
-        else{
-            current->sentinel = 1;
-            return current;
-        }
-    }
-    else{
-        current->nextNode = freeCircularList(current->nextNode,first);
-        free(current);
-        current = NULL;
-        return current;
+    }else{
+        return NULL;
     }
 }
 
-void printCircular(Node* current, Node* first){
-    if(current==NULL)
-        return;
-    if(current==first){
-        if(current->sentinel == 1){
-            current->sentinel = 0;
-            printf(" %d",current->item);
-            printCircular(current->nextNode,first);
-        }
-        else{
-            printf("\n");
-            current->sentinel=1;
-        }
+Node* freeCircularList(Node *sentinel){
+
+    if(sentinel==NULL) return NULL;
+    
+    if(sentinel->nextNode != sentinel){
+        freeListRec(sentinel->nextNode,sentinel);
     }
+    
+    free(sentinel);
+    return NULL;
+}
+
+void printCircularList(Node* current, Node* sentinel){
+    if(current == sentinel)
+        printf("\n");
     else{
-        printf(" %d",current->item);
-        printCircular(current->nextNode,first);
+        printf(" %d", current->item);
+        printCircularList(current->nextNode,sentinel);
     }
+}
+
+void printCircular(Node* sentinel){
+    if(sentinel == NULL) return;
+    
+    if(sentinel->nextNode != sentinel)
+        printCircularList(sentinel->nextNode,sentinel);
+        
 }
 
 
@@ -90,13 +93,15 @@ int main()
     
     Node* node = createCircularList();
     
-    node = insertCircularNode(node,2);
-    node = insertCircularNode(node,6);
-    node = insertCircularNode(node,1);
-    
-    printCircular(node,node);
-    
-    node = freeCircularList(node,node);
+    if(node){
+        insertCircularNode(node,2);
+        insertCircularNode(node,6);
+        insertCircularNode(node,1);
+        
+        printCircular(node);
+        
+        node = freeCircularList(node);
+    }
     
     return 0;
 }
