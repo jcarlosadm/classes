@@ -216,6 +216,68 @@ Node* removeNode(Node *first, int item){
 }
 
 
+Node* insertLeft(Node* current, Node* right, int item){
+    if(current==NULL){
+        Node* newNode = (Node*)malloc(sizeof(Node));
+        if(!newNode)return right;
+        
+        newNode->item = item;
+        newNode->nextNode = right;
+        newNode->previousNode = NULL;
+        
+        right->previousNode = newNode;
+        return newNode;
+        
+    }
+    else if(current->item < item){
+        Node* newNode = (Node*)malloc(sizeof(Node));
+        if(!newNode)return current;
+        
+        newNode->item = item;
+        newNode->nextNode = current->nextNode;
+        newNode->previousNode = current;
+        
+        current->nextNode->previousNode = newNode;
+        current->nextNode = newNode;
+        
+        return newNode;
+    }
+    else{
+        return insertLeft(current->previousNode,current,item);
+    }
+}
+/////////////////////
+Node* insertRight(Node* current, Node* left, int item){
+    if(current==NULL){
+        Node* newNode = (Node*)malloc(sizeof(Node));
+        if(!newNode)return left;
+        
+        newNode->item = item;
+        newNode->nextNode = NULL;
+        newNode->previousNode = left;
+        
+        left->nextNode = newNode;
+        return newNode;
+        
+    }
+    else if(current->item > item){
+        Node* newNode = (Node*)malloc(sizeof(Node));
+        if(!newNode)return current;
+        
+        newNode->item = item;
+        newNode->nextNode = current;
+        newNode->previousNode = current->previousNode;
+        
+        current->previousNode->nextNode = newNode;
+        current->previousNode = newNode;
+        
+        return newNode;
+    }
+    else{
+        return insertRight(current->nextNode,current,item);
+    }
+}
+///////////////////////
 Node* insertOrderedNode(Node* middle, int item){
     
     if(middle==NULL){
@@ -227,21 +289,12 @@ Node* insertOrderedNode(Node* middle, int item){
     }
     else{
         if(middle->item > item){
-            Node* newNode = (Node*)malloc(sizeof(Node));
-            newNode->item = item;
-            newNode->nextNode = middle;
-            return newNode;
+            return insertLeft(middle->previousNode,middle,item);
         }
         else{
-            middle->nextNode = insertSortedNode(middle->nextNode,item);
-            return first;
+            return insertRight(middle->nextNode,middle,item);
         }
     }
     
 }
-
-
-
-
-
 

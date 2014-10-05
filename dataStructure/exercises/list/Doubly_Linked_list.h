@@ -80,4 +80,6 @@ Node* search(Node* first, int item);
  */
 Node* removeNode(Node *first, int item);
 
+Node* insertOrderedNode(Node* middle, int item);
+
 #endif // DOUBLY_LINKED_LIST_H
