@@ -1,13 +1,11 @@
 #include<stdio.h>
 #include "dStack.h"
 
-int main(int argc, char* argv[])
-{
+void printBinary(int number){
     
-    int number = 5;
     int digit = 0;
     DStack* stack = dStackCreateStack();
-    if(!stack) return 1;
+    if(!stack) return;
     
     if(number==0)printf("0");
     
@@ -24,6 +22,12 @@ int main(int argc, char* argv[])
     printf("\n");
     
     stack = dStackFree(stack);
+}
+
+int main(int argc, char* argv[])
+{
+    
+    printBinary(2);
     
     return 0;
 }
