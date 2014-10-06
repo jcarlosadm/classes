@@ -312,11 +312,11 @@ Node* bubble(Node* first){
         return first;
 }
 
-Node* bubblesort(Node* first){
+Node* listsort(Node* first){
     if(first == NULL)
         return NULL;
     else{
-        first->nextNode = bubblesort(first->nextNode);
+        first->nextNode = listsort(first->nextNode);
         first = bubble(first);
         return first;
     }

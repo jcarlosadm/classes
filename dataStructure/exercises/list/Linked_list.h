@@ -105,6 +105,9 @@ void printCharLinkedList(NodeCharFreq* first);
  */
 NodeCharFreq* listOfCharFreq(char* literal,int sizeLiteral, NodeCharFreq* first);
 
-Node* bubblesort(Node* first);
+/**
+ * ordena uma lista
+ */
+Node* listsort(Node* first);
 
 #endif // LINKED_LIST_H
