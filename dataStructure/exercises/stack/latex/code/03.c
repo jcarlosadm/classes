@@ -1,41 +1,67 @@
 /**
- * Verifica se os parênteses, colchetes e chaves
- * estão balanceados
+ * Função auxiliar que verifica se parênteses, chaves e
+ * colchetes fecham
  */
-int isBalanced(char *parentheses, int size){
+int checkParentheses(Stack* stack, char parentheses){
     
-    Stack* stack = createStack();
+    if(stackIsEmpty(stack))
+        return 0;
     
-    int count, par=0,col=0,cha=0;
-    for(count=0;count<size-1;count++){
-        push(stack,parentheses[count]);
-    }
+    char pop;
+    
+    int result = 0;
     
     while(!stackIsEmpty(stack)){
-        switch(pop(stack)){
-        case '(':
-            par++;
-            break;
-        case ')':
-            par--;
-            break;
-        case '[':
-            col++;
-            break;
-        case ']':
-            col--;
-            break;
-        case '{':
-            cha++;
-            break;
-        case '}':
-            cha--;
+        
+        pop = pop(stack);
+        
+        if(pop==')' || pop==']' || pop=='}'){
+            result = checkParentheses(stack,pop);
+            if(!result) return result;
+        }
+        else{
+            switch(parentheses){
+            case ')':
+                if(pop=='(')
+                    return 1;
+                else return 0;
+            case ']':
+                if(pop=='[')
+                    return 1;
+                else return 0;
+            case '}':
+                if(pop=='{')
+                    return 1;
+                else return 0;
+            }
         }
     }
     
+    return 0;
+}
+/**
+ * Verifica se os parênteses, colchetes e chaves
+ * estão balanceados
+ */
+int isBalanced(char *sequence, int size){
+    
+    Stack* stack = createStack();
+    
+    int count;
+    for(count=0;count<size-1;count++){
+        push(stack,sequence[count]);
+    }
+    
+    if(stackIsEmpty(stack)){
+        stack = stackFree(stack);
+        return 1;
+    }
+    
     int result = 1;
-    if(par || col || cha)
-        result = 0;
+    
+    while(!stackIsEmpty(stack) && result){
+        result = checkParentheses(stack,pop(stack));
+    }
     
     stack = stackFree(stack);
     
