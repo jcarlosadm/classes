@@ -68,7 +68,7 @@ int isBalanced(char *sequence, int size){
 int main()
 {
     
-    char sequence[] = "[[]]({[()]})";
+    char sequence[] = "{({)}";
     printf("%s\n",sequence);
     
     if(isBalanced(sequence,sizeof(sequence)))
