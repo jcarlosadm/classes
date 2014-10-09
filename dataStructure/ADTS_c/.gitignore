@@ -8,3 +8,5 @@
 003_queue_test
 004_pqueue_test.c
 004_pqueue_test
+005_deque_test.c
+005_deque_test
