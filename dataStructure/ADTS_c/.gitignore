@@ -4,3 +4,5 @@
 001_stack_test
 002_dStack_test.c
 002_dStack_test
+003_queue_test.c
+003_queue_test
