@@ -10,3 +10,5 @@
 004_pqueue_test
 005_deque_test.c
 005_deque_test
+*_test
+*_test.c
