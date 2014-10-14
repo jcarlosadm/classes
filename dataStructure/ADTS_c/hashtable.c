@@ -128,13 +128,16 @@ int HASHTABLE_put(HashTable* hashTable, int key, int value){
     int index = hashFunction(key);
     
     int lockPosition = 0;
-    int positionLocked = 0;
+    int positionLocked = -1;
     
     while(hashTable->table[index] != NULL){
-        if(!lockPosition && hashTable->table[index]->key == -1){
-            positionLocked = index;
-            lockPosition = 1;
-        }else{
+        if(!lockPosition){
+            if(hashTable->table[index]->key == -1){
+                positionLocked = index;
+                lockPosition = 1;
+            }
+        }
+        else{
             if(index==positionLocked)
                 break;
         }
