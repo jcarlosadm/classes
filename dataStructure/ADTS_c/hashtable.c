@@ -128,17 +128,17 @@ int HASHTABLE_put(HashTable* hashTable, int key, int value){
     int index = hashFunction(key);
     
     int lockPosition = 0;
-    int positionLocked = -1;
+    int lockedPosition = -1;
     
     while(hashTable->table[index] != NULL){
         if(!lockPosition){
             if(hashTable->table[index]->key == -1){
-                positionLocked = index;
+                lockedPosition = index;
                 lockPosition = 1;
             }
         }
         else{
-            if(index==positionLocked)
+            if(index==lockedPosition)
                 break;
         }
         
@@ -151,8 +151,8 @@ int HASHTABLE_put(HashTable* hashTable, int key, int value){
     }
     
     if(lockPosition){
-        hashTable->table[positionLocked]->key = key;
-        hashTable->table[positionLocked]->value = value;
+        hashTable->table[lockedPosition]->key = key;
+        hashTable->table[lockedPosition]->value = value;
         hashTable->size++;
         return 1;
     }
