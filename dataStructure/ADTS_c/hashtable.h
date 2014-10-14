@@ -31,7 +31,7 @@ HashTable* HASHTABLE_free(HashTable* hashTable);
 /**
  * Adiciona elemento na hashTable
  * retorna 0 se não conseguir inserir o elemento por falha de alocação
- * ou 1 em caso de sucesso.
+ * ou se a table estiver cheia, ou 1 em caso de sucesso.
  *
  * HashTable* hashTable: ponteiro para a estrutura HashTable
  * int key: chave do novo elemento
