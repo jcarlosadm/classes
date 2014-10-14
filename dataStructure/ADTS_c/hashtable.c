@@ -1,8 +1,5 @@
 #include "hashtable.h"
 
-// hash table com listas? 1 true, 0 false
-#define HASHTABLE_WITH_LIST 1
-
 // tamanho da table da hashTable
 #define MAX_TABLE_SIZE 11
 
