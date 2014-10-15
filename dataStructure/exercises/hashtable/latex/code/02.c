@@ -11,7 +11,7 @@ de acordo com a constante HASHTABLE_WITH_LIST
 
 #include "hashtable.h"
 
-// hash table com listas? 1 true, 0 false
+// hash table com close addressing? 1 true, 0 false
 #define HASHTABLE_WITH_LIST 1
 
 // tamanho da table da hashtable
