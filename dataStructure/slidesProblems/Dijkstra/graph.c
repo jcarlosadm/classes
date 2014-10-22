@@ -6,7 +6,6 @@ typedef struct adjList AdjList;
 struct adjList {
     int item;
     int weight;
-    int visited;
     AdjList *nextAdjVertex;
 };
 
@@ -67,7 +66,6 @@ void GRAPH_addEdge(Graph *graph, int vertexX, int vertexY, int weight){
     
         vertex->item = vertexY;
         vertex->weight = weight;
-        vertex->visited = 0;
         vertex->nextAdjVertex = graph->vertices[vertexX];
         
         graph->vertices[vertexX] = vertex;
@@ -92,14 +90,14 @@ void GRAPH_printGraph(Graph* graph){
     printAdjLists(graph->vertices,0);
 }
 
-void depthFirstSearch(Graph* graph, int vertex){
+void depthFirstSearch(Graph* graph, int *visited, int vertex){
     if(graph->vertices[vertex])
-        (graph->vertices[vertex])->visited = 1;
+        visited[vertex] = 1;
     printf("%d\n",vertex);
     AdjList* adjList = graph->vertices[vertex];
     while(adjList){
-        if(!(graph->vertices[adjList->item])->visited)
-            depthFirstSearch(graph, adjList->item);
+        if(!visited[adjList->item])
+            depthFirstSearch(graph, visited,adjList->item);
         adjList = adjList->nextAdjVertex;
     }
     
@@ -107,22 +105,19 @@ void depthFirstSearch(Graph* graph, int vertex){
 
 void GRAPH_depthFirstSearch(Graph* graph, int vertex){
     
-    depthFirstSearch(graph,vertex);
-    
+    int visited[MAX_SIZE];
     int count;
     for(count=0;count<MAX_SIZE;count++){
-        if(graph->vertices[count]){
-            AdjList* adjList = graph->vertices[count];
-            while(adjList){
-                if(adjList->visited)
-                    adjList->visited = 0;
-                adjList = adjList->nextAdjVertex;
-            }
-        }
+        visited[count] = 0;
     }
+    
+    depthFirstSearch(graph,visited,vertex);
     
 }
 
+// deverá guardar o menor caminho dos adjacentes de um n
+// deverá guardar os predecessores de cada posição (ver por último)
+// deve retornar 0 se entrou num beco sem saída (ver por último)
 void setCosts(AdjList** vertices, int* costs, int* visited, int n, int end){
     if(vertices[n]){
         visited[n] = 1;
@@ -134,14 +129,13 @@ void setCosts(AdjList** vertices, int* costs, int* visited, int n, int end){
                 costs[adjList->item] = (costs[n] + adjList->weight);
                 visited[adjList->item] = 0;
             }
-            adjList = adjList->nextAdjVertex;
-        }
-        adjList = vertices[n];
-        while(adjList){
+            
             if(!visited[adjList->item] && adjList->item != end)
                 setCosts(vertices,costs,visited,adjList->item,end);
+                
             adjList = adjList->nextAdjVertex;
         }
+        
     }
 }
 
@@ -157,28 +151,6 @@ int GRAPH_dijkstra(Graph* graph, int init, int end){
     
     costs[init] = 0;
     
-    /*for(i=0;i<MAX_SIZE;i++){
-    
-        if(graph->vertices[i] != NULL && i != end){
-            
-            visited[i] = 1;
-            
-            AdjList* adjList = graph->vertices[i];
-            
-            while(adjList!=NULL && !visited[adjList->item]){
-            
-                if(costs[adjList->item] > (costs[i] + adjList->weight)
-                    && costs[i]!=INT_MAX){
-                    
-                    printf("%d %d %d\n",i,adjList->item,costs[i] + adjList->weight);
-                    costs[adjList->item] = (costs[i] + adjList->weight);
-                }
-                adjList = adjList->nextAdjVertex;
-                
-            }
-        }
-        
-    }*/
     setCosts(graph->vertices,costs,visited,init,end);
     return costs[end];
 }
