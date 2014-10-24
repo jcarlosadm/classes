@@ -29,7 +29,7 @@ struct sparseMatrix{
  * \param columns quantidade de colunas
  */
 SparseMatrix* SPARSE_MATRIX_create(int rows, int columns){
-    if(rows<1 || columns<1)return 0;
+    if(rows<1 || columns<1)return NULL;
     
     SparseMatrix* sparseMatrix = malloc(sizeof(SparseMatrix));
     if(!sparseMatrix) return NULL;
@@ -144,6 +144,11 @@ int SPARSE_MATRIX_insert(SparseMatrix* sparseMatrix, int row, int column, int va
         return 0;
     }
     
+    if(value==0){
+        SPARSE_MATRIX_delete(sparseMatrix,row,column);
+        return 1;
+    }
+    
     Node* currentColumn = sparseMatrix->head->nextColumn;
     while(currentColumn){
         if(currentColumn->column == column)
@@ -206,38 +211,110 @@ int SPARSE_MATRIX_insert(SparseMatrix* sparseMatrix, int row, int column, int va
     return 1;
 }
 
-void SPARSE_MATRIX_test(SparseMatrix* sparseMatrix){
-    Node* current = sparseMatrix->head->nextColumn;
-    Node* cell = NULL;
-    if(current!=sparseMatrix->head){
-        printf("colunas:\n");
+/**
+ * Deleta um nó da matriz esparsa (na prática, o valor do nó passa a ser zero)
+ * \return 1 em caso de sucesso ou 0 em caso de falha
+ * \param sparseMatrix ponteiro para uma matriz esparsa
+ * \param row linha da localização do nó a ser removido
+ * \param column coluna da localização do nó a ser removido
+ */
+int SPARSE_MATRIX_delete(SparseMatrix* sparseMatrix, int row, int column){
+    if(sparseMatrix->rows < row || sparseMatrix->columns < column){
+        printf("dimensoes insuficientes da matriz\n");
+        return 0;
     }
-    while(current!=sparseMatrix->head){
-        cell = current->nextRow;
-        if(cell!=current){
-            while(cell != current){
-                printf("%d ",cell->item);
-                cell = cell->nextRow;
+    
+    Node* current = sparseMatrix->head->nextRow;
+    Node* previousNode = NULL;
+    int foundRow = 0;
+    while(current && current!=sparseMatrix->head){
+        if(current->row == row){
+            previousNode = current;
+            while(previousNode->nextColumn && previousNode->nextColumn!=current){
+                if(previousNode->nextColumn->column == column){
+                    foundRow = 1;
+                    break;
+                }
+                previousNode = previousNode->nextColumn;
             }
-            printf("\n");
         }
+        if(foundRow) break;
+        
+        current = current->nextRow;
+    }
+    
+    if(!foundRow) return 0;
+    
+    current = sparseMatrix->head->nextColumn;
+    Node* upNode = NULL;
+    int foundColumn = 0;
+    while(current && current!=sparseMatrix->head){
+        if(current->column == column){
+            upNode = current;
+            while(upNode->nextRow && upNode->nextRow!=current){
+                if(upNode->nextRow->row == row){
+                    foundColumn = 1;
+                    break;
+                }
+                upNode = upNode->nextRow;
+            }
+        }
+        if(foundColumn) break;
         current = current->nextColumn;
     }
-    current = sparseMatrix->head->nextRow;
-    cell = NULL;
-    if(current!=sparseMatrix->head){
-        printf("linhas:\n");
-    }
-    while(current!=sparseMatrix->head){
-        cell = current->nextColumn;
-        if(cell!=current){
-            while(cell != current){
-                printf("%d ",cell->item);
-                cell = cell->nextColumn;
+    
+    if(!foundColumn) return 0;
+    
+    Node* node = previousNode->nextColumn;
+    
+    previousNode->nextColumn = previousNode->nextColumn->nextColumn;
+    upNode->nextRow = upNode->nextRow->nextRow;
+    
+    free(node);
+    return 1;
+}
+
+/**
+ * Imprime a matriz esparsa
+ * \param sparseMatrix ponteiro para uma matriz esparsa
+ */
+void SPARSE_MATRIX_print(SparseMatrix* sparseMatrix){
+    if(!sparseMatrix) return;
+    
+    Node* current = sparseMatrix->head->nextRow;
+    Node* node;
+    int count;
+    printf("matriz:\n");
+    while(current && current!=sparseMatrix->head){
+        node = current;
+        for(count=1;count <= sparseMatrix->columns;count++){
+            if(node->nextColumn->column == count){
+                node = node->nextColumn;
+                printf("%d ",node->item);
             }
-            printf("\n");
+            else{
+                printf("0 ");
+            }
         }
+        printf("\n");
         current = current->nextRow;
+    }
+    
+    current = sparseMatrix->head->nextColumn;
+    printf("matriz transposta:\n");
+    while(current && current!=sparseMatrix->head){
+        node = current;
+        for(count=1;count <= sparseMatrix->rows;count++){
+            if(node->nextRow->row == count){
+                node = node->nextRow;
+                printf("%d ",node->item);
+            }
+            else{
+                printf("0 ");
+            }
+        }
+        printf("\n");
+        current = current->nextColumn;
     }
 }
 
