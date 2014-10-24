@@ -19,8 +19,10 @@ typedef struct sparseMatrix SparseMatrix;
  * Aloca a matriz esparsa
  * \return Retorna o ponteiro para a matriz esparsa, ou
  * NULL se não foi possível alocar memória
+ * \param rows quantidade de linhas
+ * \param columns quantidade de colunas
  */
-SparseMatrix* SPARSE_MATRIX_create();
+SparseMatrix* SPARSE_MATRIX_create(int rows, int columns);
 
 /**
  * Desaloca uma matriz esparsa
@@ -57,5 +59,7 @@ int SPARSE_MATRIX_delete(SparseMatrix* sparseMatrix, int row, int column);
  * com o valor do nó, se encontrado
  */
 int SPARSE_MATRIX_get(SparseMatrix* sparseMatrix, int row, int column, int *value);
+
+void SPARSE_MATRIX_test(SparseMatrix* sparseMatrix);
 
 #endif // SPARSE_MATRIX_H
