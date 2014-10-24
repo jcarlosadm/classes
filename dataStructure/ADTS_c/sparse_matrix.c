@@ -139,7 +139,7 @@ SparseMatrix* SPARSE_MATRIX_free(SparseMatrix* sparseMatrix){
  * \param value valor a ser inserido
  */
 int SPARSE_MATRIX_insert(SparseMatrix* sparseMatrix, int row, int column, int value){
-    if(sparseMatrix->columns < column || sparseMatrix->rows < row){
+    if(!sparseMatrix || sparseMatrix->columns < column || sparseMatrix->rows < row){
         printf("dimensoes insuficientes na matriz\n");
         return 0;
     }
@@ -272,6 +272,85 @@ int SPARSE_MATRIX_delete(SparseMatrix* sparseMatrix, int row, int column){
     
     free(node);
     return 1;
+}
+
+/**
+ * Pega valor do nó de uma localização específica, e armazena em value
+ * \return 1 em caso de suceso ou 0 em caso de falha
+ * \param sparseMatrix ponteiro para uma matriz esparsa
+ * \param row linha da localização do nó do valor a ser retornado
+ * \param column coluna da localização do nó do valor a ser retornado
+ * \param value ponteiro para inteiro, esse inteiro a ser preenchido
+ * com o valor do nó, se encontrado
+ */
+int SPARSE_MATRIX_get(SparseMatrix* sparseMatrix, int row, int column, int *value){
+    if(!sparseMatrix) return 0;
+    
+    if(sparseMatrix->rows < row || sparseMatrix->columns < column)
+        return 0;
+    
+    Node* current = sparseMatrix->head->nextRow;
+    Node* node = NULL;
+    while(current && current!=sparseMatrix->head){
+        if(current->row == row){
+            node = current->nextColumn;
+            while(node && node!=current){
+                if(node->column == column){
+                    (*value) = node->item;
+                    return 1;
+                }
+                node = node->nextColumn;
+            }
+            return 0;
+        }
+        
+        current = current->nextRow;
+    }
+    return 0;
+}
+
+/**
+ * Armazena quantidade de linhas e colunas nas variáveis rows e columns
+ * \return 1 em caso de sucesso e 0 em caso de falha (ponteiro sparseMatrix é igual a NULL)
+ * \param sparseMatrix ponteiro para uma matriz esparsa
+ * \param rows ponteiro para inteiro, esse inteiro a ser preenchido com número de linhas
+ * \param columns ponteiro para inteiro, esse inteiro a ser preenchido com número de colunas
+ */
+int SPARSE_MATRIX_getDimension(SparseMatrix* sparseMatrix, int *rows, int *columns){
+    if(!sparseMatrix) return 0;
+    
+    (*rows) = sparseMatrix->rows;
+    (*columns) = sparseMatrix->columns;
+    return 1;
+}
+
+/**
+ * Adiciona mais colunas na matriz
+ * \return 1 em caso de sucesso ou 0 em caso de falha
+ * \param sparseMatrix ponteiro para uma matriz esparsa
+ * \param columns número de colunas para adicionar
+ */
+int SPARSE_MATRIX_insertColumns(SparseMatrix* sparseMatrix, int columns){
+    Node* current = sparseMatrix->head;
+    while(current->nextColumn && current->nextColumn != sparseMatrix->head){
+        current = current->nextColumn;
+    }
+    
+    int count;
+    for(count=0;count<columns;count++){
+        current->nextColumn = malloc(sizeof(Node));
+        if(!current->nextColumn){
+            printf("%d columns added\n",count);
+            current->nextColumn = sparseMatrix->head;
+            return 0;
+        }
+        current->nextColumn->nextRow = current->nextColumn;
+        current->nextColumn->column = sparseMatrix->columns+count+1;
+        current->nextColumn->row = 0;
+        sparseMatrix->columns = sparseMatrix->columns + 1;
+        current = current->nextColumn;
+    }
+    current->nextColumn = sparseMatrix->head;
 }
 
 /**

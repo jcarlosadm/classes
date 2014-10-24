@@ -68,7 +68,7 @@ int SPARSE_MATRIX_get(SparseMatrix* sparseMatrix, int row, int column, int *valu
  * \param rows ponteiro para inteiro, esse inteiro a ser preenchido com número de linhas
  * \param columns ponteiro para inteiro, esse inteiro a ser preenchido com número de colunas
  */
-int SPARSE_MATRIX_getDimensions(SparseMatrix* sparseMatrix, int *rows, int *columns);
+int SPARSE_MATRIX_getDimension(SparseMatrix* sparseMatrix, int *rows, int *columns);
 
 /**
  * Adiciona mais colunas na matriz
@@ -88,29 +88,25 @@ int SPARSE_MATRIX_insertRows(SparseMatrix* sparseMatrix, int rows);
 
 /**
  * Diminui quantidade de colunas
- * \return 1 em caso de sucesso e 0 em caso de falha
- * \param sparseMatrix ponteiro para uma matriz esparsa
- * \param columns quantidade de colunas a serem removidas
- */
-/**
  * As colunas mais à direita são removidas. Qualquer célula pertencente
  * a essas colunas são desalocadas. Como a matriz deve ter pelo menos uma
  * coluna, o retorno 0 é para quando tentar reduzir o número de colunas
  * para menos de 1.
+ * \return 1 em caso de sucesso e 0 em caso de falha
+ * \param sparseMatrix ponteiro para uma matriz esparsa
+ * \param columns quantidade de colunas a serem removidas
  */
 int SPARSE_MATRIX_removeColumns(SparseMatrix* sparseMatrix, int columns);
 
 /**
  * Diminui quantidade de linhas
- * \return 1 em caso de sucesso e 0 em caso de falha
- * \param sparseMatrix ponteiro para uma matriz esparsa
- * \param rows quantidade de linhas a serem removidas
- */
-/**
  * As linhas mais à baixo são removidas. Qualquer célula pertencente
  * a essas linhas são desalocadas. Como a matriz deve ter pelo menos uma
  * linha, o retorno 0 é para quando tentar reduzir o número de linhas
  * para menos de 1.
+ * \return 1 em caso de sucesso e 0 em caso de falha
+ * \param sparseMatrix ponteiro para uma matriz esparsa
+ * \param rows quantidade de linhas a serem removidas
  */
 int SPARSE_MATRIX_removeRows(SparseMatrix* sparseMatrix, int rows);
 
