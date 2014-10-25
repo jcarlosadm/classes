@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
+#include "dStack.h"
 
 typedef struct graph Graph;
 

@@ -4,7 +4,7 @@
 int main()
 {
     Graph* graph = GRAPH_create();
-    
+    /*
     //do slide
     GRAPH_addEdge(graph,1,6,14);
     GRAPH_addEdge(graph,1,3,9);
@@ -28,9 +28,10 @@ int main()
     GRAPH_depthFirstSearch(graph,2);
     printf("\n");
     
-    printf("%d\n",GRAPH_dijkstra(graph,1,5));
+    printf("%d\n",GRAPH_dijkstra(graph,5,1));*/
     
-    /*GRAPH_addEdge(graph,1,2,1);
+    
+    GRAPH_addEdge(graph,1,2,1);
     GRAPH_addEdge(graph,1,3,2);
     GRAPH_addEdge(graph,2,1,1);
     GRAPH_addEdge(graph,2,4,2);
@@ -47,7 +48,7 @@ int main()
     GRAPH_addEdge(graph,8,4,3);
     GRAPH_addEdge(graph,8,6,2);
     
-    printf("%d\n",GRAPH_dijkstra(graph,7,3));*/
+    printf("%d\n",GRAPH_dijkstra(graph,5,7));
     
     graph = GRAPH_free(graph);
     
