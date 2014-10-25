@@ -345,12 +345,46 @@ int SPARSE_MATRIX_insertColumns(SparseMatrix* sparseMatrix, int columns){
             return 0;
         }
         current->nextColumn->nextRow = current->nextColumn;
-        current->nextColumn->column = sparseMatrix->columns+count+1;
+        current->nextColumn->column = sparseMatrix->columns+1;
         current->nextColumn->row = 0;
         sparseMatrix->columns = sparseMatrix->columns + 1;
         current = current->nextColumn;
     }
     current->nextColumn = sparseMatrix->head;
+    return 1;
+}
+
+/**
+ * Adiciona mais linhas na matriz
+ * \return 1 em caso de sucesso ou 0 em caso de falha
+ * \param sparseMatrix ponteiro para uma matriz esparsa
+ * \param rows número de linhas para adicionar
+ */
+int SPARSE_MATRIX_insertRows(SparseMatrix* sparseMatrix, int rows){
+    Node* current = sparseMatrix->head;
+    
+    while(current->nextRow && current->nextRow!=sparseMatrix->head){
+        current = current->nextRow;
+    }
+    
+    
+    int count;
+    for(count=0;count<rows;count++){
+        current->nextRow = malloc(sizeof(Node));
+        if(!current->nextRow){
+            printf("%d rows added\n",count);
+            current->nextRow = sparseMatrix->head;
+            return 0;
+        }
+        current->nextRow->nextColumn = current->nextRow;
+        current->nextRow->row = sparseMatrix->rows + 1;
+        current->nextRow->column = 0;
+        sparseMatrix->rows = sparseMatrix->rows + 1;
+        current = current->nextRow;
+    }
+    current->nextRow = sparseMatrix->head;
+    
+    return 1;
 }
 
 /**
@@ -365,6 +399,7 @@ void SPARSE_MATRIX_print(SparseMatrix* sparseMatrix){
     int count;
     printf("matriz:\n");
     while(current && current!=sparseMatrix->head){
+        printf("row %d - ",current->row);
         node = current;
         for(count=1;count <= sparseMatrix->columns;count++){
             if(node->nextColumn->column == count){
@@ -382,6 +417,7 @@ void SPARSE_MATRIX_print(SparseMatrix* sparseMatrix){
     current = sparseMatrix->head->nextColumn;
     printf("matriz transposta:\n");
     while(current && current!=sparseMatrix->head){
+        printf("column %d - ",current->column);
         node = current;
         for(count=1;count <= sparseMatrix->rows;count++){
             if(node->nextRow->row == count){
