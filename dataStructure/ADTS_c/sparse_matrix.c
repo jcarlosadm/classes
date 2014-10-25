@@ -139,7 +139,9 @@ SparseMatrix* SPARSE_MATRIX_free(SparseMatrix* sparseMatrix){
  * \param value valor a ser inserido
  */
 int SPARSE_MATRIX_insert(SparseMatrix* sparseMatrix, int row, int column, int value){
-    if(!sparseMatrix || sparseMatrix->columns < column || sparseMatrix->rows < row){
+    if(!sparseMatrix) return 0;
+    
+    if(sparseMatrix->columns < column || sparseMatrix->rows < row){
         printf("dimensoes insuficientes na matriz\n");
         return 0;
     }
@@ -384,6 +386,119 @@ int SPARSE_MATRIX_insertRows(SparseMatrix* sparseMatrix, int rows){
     }
     current->nextRow = sparseMatrix->head;
     
+    return 1;
+}
+
+/**
+ * Diminui quantidade de colunas
+ * As colunas mais à direita são removidas. Qualquer célula pertencente
+ * a essas colunas são desalocadas. Como a matriz deve ter pelo menos uma
+ * coluna, o retorno 0 é para quando tentar reduzir o número de colunas
+ * para menos de 1.
+ * \return 1 em caso de sucesso e 0 em caso de falha
+ * \param sparseMatrix ponteiro para uma matriz esparsa
+ * \param columns quantidade de colunas a serem removidas
+ */
+int SPARSE_MATRIX_removeColumns(SparseMatrix* sparseMatrix, int columns){
+    if(!sparseMatrix) return 0;
+    
+    if(sparseMatrix->columns - columns < 1)
+        return 0;
+    
+    int remove;
+    Node* current = sparseMatrix->head->nextRow;
+    Node* node = NULL;
+    Node* nav = NULL;
+    while(current && current != sparseMatrix->head){
+        node = current;
+        while(node->nextColumn && node->nextColumn!=current){
+            remove = sparseMatrix->columns - columns + 1;
+            while(remove <= sparseMatrix->columns){
+                if(node->nextColumn->column == remove)
+                    break;
+                remove++;
+            }
+            if(remove <= sparseMatrix->columns){
+                nav = node->nextColumn;
+                node->nextColumn = node->nextColumn->nextColumn;
+                free(nav);
+            }
+            node = node->nextColumn;
+        }
+        current = current->nextRow;
+    }
+    current = sparseMatrix->head;
+    remove = sparseMatrix->columns - columns + 1;
+    while(current->nextColumn && current->nextColumn!=sparseMatrix->head){
+        
+        if(current->nextColumn->column == remove){
+            node = current->nextColumn;
+            current->nextColumn = current->nextColumn->nextColumn;
+            free(node);
+            
+            remove++;
+        }
+        else
+            current = current->nextColumn;
+    }
+    
+    sparseMatrix->columns = sparseMatrix->columns - columns;
+    
+    return 1;
+}
+
+/**
+ * Diminui quantidade de linhas
+ * As linhas mais à baixo são removidas. Qualquer célula pertencente
+ * a essas linhas são desalocadas. Como a matriz deve ter pelo menos uma
+ * linha, o retorno 0 é para quando tentar reduzir o número de linhas
+ * para menos de 1.
+ * \return 1 em caso de sucesso e 0 em caso de falha
+ * \param sparseMatrix ponteiro para uma matriz esparsa
+ * \param rows quantidade de linhas a serem removidas
+ */
+int SPARSE_MATRIX_removeRows(SparseMatrix* sparseMatrix, int rows){
+    if(!sparseMatrix) return 0;
+    
+    if(sparseMatrix->rows - rows < 1) return 0;
+    
+    int remove;
+    Node* current = sparseMatrix->head->nextColumn;
+    Node* node = NULL;
+    Node* nav = NULL;
+    while(current && current!=sparseMatrix->head){
+        node = current;
+        while(node->nextRow && node->nextRow != current){
+            remove = sparseMatrix->rows - rows + 1;
+            while(remove <= sparseMatrix->rows){
+                if(node->nextRow->row == remove)
+                    break;
+                remove++;
+            }
+            if(remove <= sparseMatrix->rows){
+                nav = node->nextRow;
+                node->nextRow = node->nextRow->nextRow;
+                free(nav);
+            }
+            node = node->nextRow;
+        }
+        current = current->nextColumn;
+    }
+    current = sparseMatrix->head;
+    remove = sparseMatrix->rows - rows + 1;
+    while(current->nextRow && current->nextRow!=sparseMatrix->head){
+        if(current->nextRow->row == remove){
+            node = current->nextRow;
+            current->nextRow = current->nextRow->nextRow;
+            free(node);
+            
+            remove++;
+        }
+        else
+            current = current->nextRow;
+    }
+    
+    sparseMatrix->rows = sparseMatrix->rows - rows;
     return 1;
 }
 
