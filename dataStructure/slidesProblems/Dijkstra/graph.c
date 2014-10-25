@@ -273,14 +273,6 @@ int GRAPH_dijkstra(Graph* graph, int init, int end){
     
     stack = dStackFree(stack);
     
-    /*printf("path: %d ",end);
-    count = end;
-    while(path[count]!=init){
-        printf("%d ",path[count]);
-        count = path[count];
-    }
-    printf("%d\n", init);*/
-    
     /* print cost */
     printf("cost: %d\n", costs[end]);
     
