@@ -58,3 +58,24 @@ void BINARYTREE_printPostOrder(BinaryTree* binaryTree){
     }
 }
 
+BinaryTree* BINARYSEARCHTREE_insertNode(BinaryTree* binaryTree, int value){
+    if(binaryTree==NULL){
+        binaryTree = BINARYTREE_createBinaryTree(value,NULL,NULL);
+    }
+    else if(binaryTree->value > value){
+        binaryTree->left = BINARYSEARCHTREE_insertNode(binaryTree->left, value);
+    }
+    else{
+        binaryTree->right = BINARYSEARCHTREE_insertNode(binaryTree->right, value);
+    }
+    return binaryTree;
+}
+
+BinaryTree* BINARYSEARCHTREE_binarySearch(BinaryTree* binaryTree, int value){
+    if((binaryTree==NULL) || (binaryTree->value == value))
+        return binaryTree;
+    else if(binaryTree->value > value)
+        return BINARYSEARCHTREE_binarySearch(binaryTree->left,value);
+    else
+        return BINARYSEARCHTREE_binarySearch(binaryTree->right, value);
+}

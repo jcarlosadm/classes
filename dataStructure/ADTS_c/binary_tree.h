@@ -21,4 +21,8 @@ void BINARYTREE_printPreOrder(BinaryTree* binaryTree);
 
 void BINARYTREE_printPostOrder(BinaryTree* binaryTree);
 
+BinaryTree* BINARYSEARCHTREE_insertNode(BinaryTree* binaryTree, int value);
+
+BinaryTree* BINARYSEARCHTREE_binarySearch(BinaryTree* binaryTree, int value);
+
 #endif // BINARYTREE
