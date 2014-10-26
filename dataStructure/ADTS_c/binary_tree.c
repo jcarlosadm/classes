@@ -223,12 +223,26 @@ BinaryTree* BINARYSEARCHTREE_remove(BinaryTree* binaryTree, int value){
     return binaryTree;
 }
 
-
-
-
-
-
-
-
-
+BinaryTree* BINARYSEARCHTREE_binarySearchNonRecursive(BinaryTree* binaryTree, int value){
+    if(!binaryTree || binaryTree->value == value) return binaryTree;
+    
+    BinaryTree* search = binaryTree;
+    while(search){
+        if(search->value == value) return search;
+        else if(search->value > value){
+            if(!search->left) return NULL;
+            else
+                search = search->left;
+        }
+        
+        else{
+            if(!search->right) return NULL;
+            else
+                search = search->right;
+        }
+    }
+    
+    if(search) return search;
+    else return NULL;
+}
 
