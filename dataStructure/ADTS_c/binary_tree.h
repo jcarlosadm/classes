@@ -25,4 +25,6 @@ BinaryTree* BINARYSEARCHTREE_insertNode(BinaryTree* binaryTree, int value);
 
 BinaryTree* BINARYSEARCHTREE_binarySearch(BinaryTree* binaryTree, int value);
 
+BinaryTree* BINARYSEARCHTREE_remove(BinaryTree* binaryTree, int value);
+
 #endif // BINARYTREE

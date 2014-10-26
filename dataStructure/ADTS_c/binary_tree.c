@@ -79,3 +79,156 @@ BinaryTree* BINARYSEARCHTREE_binarySearch(BinaryTree* binaryTree, int value){
     else
         return BINARYSEARCHTREE_binarySearch(binaryTree->right, value);
 }
+
+BinaryTree* BINARYSEARCHTREE_searchPrevious(BinaryTree* binaryTree, int value){
+    
+    if(!binaryTree)
+        return NULL;
+    if(!(binaryTree->left) && !(binaryTree->right))
+        return NULL;
+    if((binaryTree->left && binaryTree->left->value == value) || 
+            (binaryTree->right && binaryTree->right->value == value))
+        return binaryTree;
+    
+    BinaryTree* previousNode = BINARYSEARCHTREE_searchPrevious(binaryTree->left,value);
+    
+    if(!previousNode)
+        previousNode = BINARYSEARCHTREE_searchPrevious(binaryTree->right, value);
+    
+    return previousNode;
+    
+}
+
+BinaryTree* BINARYSEARCHTREE_remove(BinaryTree* binaryTree, int value){
+    if(!binaryTree) return binaryTree;
+    
+    BinaryTree* search = NULL;
+    BinaryTree* searchPrevious = NULL;
+    
+    search = BINARYSEARCHTREE_binarySearch(binaryTree, value);
+    
+    if(!search) return binaryTree;
+    
+    if(search != binaryTree){
+        searchPrevious = BINARYSEARCHTREE_searchPrevious(binaryTree,value);
+    }
+    
+    if(!(search->left) && !(search->right)){
+        if(!searchPrevious){
+            free(search);
+            binaryTree = NULL;
+            return binaryTree;
+        }
+        else{
+            if(searchPrevious->left == search)
+                searchPrevious->left = NULL;
+            else
+                searchPrevious->right = NULL;
+            free(search);
+            return binaryTree;
+        }
+    }
+    
+    else if(!(search->left) || !(search->right)){
+        if(!searchPrevious){
+            if(search->left)
+                binaryTree = search->left;
+            else
+                binaryTree = search->right;
+            free(search);
+            return binaryTree;
+        }
+        
+        else{
+            if(searchPrevious->left == search){
+                if(search->left)
+                    searchPrevious->left = search->left;
+                else
+                    searchPrevious->left = search->right;
+            }
+            else{
+                if(search->left)
+                    searchPrevious->right = search->left;
+                else
+                    searchPrevious->right = search->right;
+            }
+            free(search);
+            return binaryTree;
+        }
+    }
+    
+    else{
+        if(!searchPrevious){
+            binaryTree->left = BINARYSEARCHTREE_insertNode(binaryTree->left, search->right->value);
+            searchPrevious = BINARYSEARCHTREE_searchPrevious(binaryTree->left, search->right->value);
+            
+            if(searchPrevious->left && searchPrevious->left->value == search->right->value){
+                free(searchPrevious->left);
+                searchPrevious->left = search->right;
+            }
+            else{
+                free(searchPrevious->right);
+                searchPrevious->right = search->right;
+            }
+            
+            binaryTree = search->left;
+            free(search);
+            return binaryTree;
+        }
+        else{
+            BinaryTree* aux = NULL;
+            if(!(search->right->left) && !(search->left->right)){
+                aux = search;
+                search->right->left = search->left;
+                if(searchPrevious->left == search)
+                    searchPrevious->left = search->right;
+                else
+                    searchPrevious->right = search->right;
+                free(search);
+                
+                return binaryTree;
+            }
+            else{
+                if(search->right->left){
+                    search->value = search->right->left->value;
+                    aux = search->right->left;
+                    
+                    if(search->right->left->left)
+                        search->right->left = search->right->left->left;
+                    else if(search->right->left->right)
+                        search->right->left = search->right->left->right;
+                    else
+                        search->right->left = NULL;
+                        
+                    free(aux);
+                    return binaryTree;
+                }
+                else{
+                    search->value = search->left->right->value;
+                    aux = search->left->right;
+                    
+                    if(search->left->right->left)
+                        search->left->right = search->left->right->left;
+                    else if(search->left->right->right)
+                        search->left->right = search->left->right->right;
+                    else
+                        search->left->right = NULL;
+                    free(aux);
+                    return binaryTree;
+                }
+            }
+        }
+    }
+    
+    return binaryTree;
+}
+
+
+
+
+
+
+
+
+
+
