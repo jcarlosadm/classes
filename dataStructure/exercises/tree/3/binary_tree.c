@@ -446,7 +446,13 @@ void evalExpressionRecursive(BinaryTree* binaryTree, DStack* dStack){
             dStackPush(dStack, value1*value2);
             break;
         case '/':
-            dStackPush(dStack, value1/value2);
+            if(value2==0){
+                printf("division by zero not performed\n");
+                printf("keep %.2f of %.2f/%.2f\n",value1,value1,value2);
+                dStackPush(dStack, value1);
+            }
+            else
+                dStackPush(dStack, value1/value2);
         }
     }
 }
