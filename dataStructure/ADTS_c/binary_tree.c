@@ -109,6 +109,12 @@ BinaryTree* BINARYSEARCHTREE_binarySearch(BinaryTree* binaryTree, int value){
         return BINARYSEARCHTREE_binarySearch(binaryTree->right, value);
 }
 
+int BINARYSEARCHTREE_search(BinaryTree* binaryTree, int value){
+    BinaryTree* bt = BINARYSEARCHTREE_binarySearch(binaryTree, value);
+    if(!bt) return 0;
+    else return 1;
+}
+
 BinaryTree* BINARYSEARCHTREE_searchPrevious(BinaryTree* binaryTree, int value){
     
     if(!binaryTree)
@@ -335,9 +341,9 @@ BinaryTree* AVL_rotate(BinaryTree* binaryTree){
 BinaryTree* AVL_checkBalanceFactor(BinaryTree* binaryTree, int value){
     
     if(binaryTree->value != value){
-        if(value < binaryTree->value)
+        if(binaryTree->left && value < binaryTree->value)
             binaryTree->left = AVL_checkBalanceFactor(binaryTree->left, value);
-        else
+        else if(binaryTree->right && value > binaryTree->value)
             binaryTree->right = AVL_checkBalanceFactor(binaryTree->right, value);
     }
     
@@ -349,14 +355,15 @@ BinaryTree* AVL_checkBalanceFactor(BinaryTree* binaryTree, int value){
 }
 
 BinaryTree* AVL_insertNode(BinaryTree* binaryTree, int value){
+    
     binaryTree = BINARYSEARCHTREE_insertNode(binaryTree, value);
     
     BINARYTREE_computeHeight(binaryTree);
     
     if(binaryTree->value != value){
-        if(value < binaryTree->value)
+        if(binaryTree->left && value < binaryTree->value)
             binaryTree->left = AVL_checkBalanceFactor(binaryTree->left, value);
-        else
+        else if(binaryTree->right && value > binaryTree->value)
             binaryTree->right = AVL_checkBalanceFactor(binaryTree->right, value);
     }
     
@@ -370,3 +377,25 @@ BinaryTree* AVL_insertNode(BinaryTree* binaryTree, int value){
     
 }
 
+BinaryTree* AVL_deleteNode(BinaryTree* binaryTree, int value){
+    if(!binaryTree) return NULL;
+    
+    binaryTree = BINARYSEARCHTREE_remove(binaryTree, value);
+    
+    BINARYTREE_computeHeight(binaryTree);
+    
+    if(binaryTree->value != value){
+        if(binaryTree->left && value < binaryTree->value)
+            binaryTree->left = AVL_checkBalanceFactor(binaryTree->left, value);
+        else if(binaryTree->right && value > binaryTree->value)
+            binaryTree->right = AVL_checkBalanceFactor(binaryTree->right, value);
+    }
+    
+    if(!AVL_isBalanced(binaryTree)){
+        binaryTree = AVL_rotate(binaryTree);
+    }
+    
+    BINARYTREE_computeHeight(binaryTree);
+    
+    return binaryTree;
+}

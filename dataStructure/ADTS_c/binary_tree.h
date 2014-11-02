@@ -27,10 +27,14 @@ BinaryTree* BINARYSEARCHTREE_insertNode(BinaryTree* binaryTree, int value);
 
 BinaryTree* BINARYSEARCHTREE_binarySearch(BinaryTree* binaryTree, int value);
 
+int BINARYSEARCHTREE_search(BinaryTree* binaryTree, int value);
+
 BinaryTree* BINARYSEARCHTREE_remove(BinaryTree* binaryTree, int value);
 
 BinaryTree* BINARYSEARCHTREE_binarySearchNonRecursive(BinaryTree* binaryTree, int value);
 
 BinaryTree* AVL_insertNode(BinaryTree* binaryTree, int value);
+
+BinaryTree* AVL_deleteNode(BinaryTree* binaryTree, int value);
 
 #endif // BINARYTREE
