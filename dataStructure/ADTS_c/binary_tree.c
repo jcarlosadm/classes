@@ -2,6 +2,7 @@
 
 struct binaryTree{
     int value;
+    int height;
     BinaryTree* left;
     BinaryTree* right;
 };
@@ -18,6 +19,7 @@ BinaryTree* BINARYTREE_createBinaryTree(
     binaryTree->value = value;
     binaryTree->left = left;
     binaryTree->right = right;
+    BINARYTREE_computeHeight(binaryTree);
     return binaryTree;
 }
 
@@ -32,6 +34,33 @@ BinaryTree* BINARYTREE_free(BinaryTree* binaryTree){
 
 int BINARYTREE_isEmpty(BinaryTree* binaryTree){
     return (binaryTree == NULL);
+}
+
+int computeHeight(BinaryTree* binaryTree, int height){
+    
+    int left=height, right=height;
+    
+    if(binaryTree->left){
+        left = computeHeight(binaryTree->left, left+1);
+    }
+    if(binaryTree->right){
+        right = computeHeight(binaryTree->right, right+1);
+    }
+    
+    if(left>=right)
+        binaryTree->height = left-height;
+    else
+        binaryTree->height = right-height;
+    
+    return binaryTree->height + height;
+    
+}
+
+int BINARYTREE_computeHeight(BinaryTree* binaryTree){
+    if(!binaryTree) return 0;
+    
+    computeHeight(binaryTree, 0);
+    return 1;
 }
 
 void BINARYTREE_printInOrder(BinaryTree* binaryTree){
@@ -244,5 +273,100 @@ BinaryTree* BINARYSEARCHTREE_binarySearchNonRecursive(BinaryTree* binaryTree, in
     
     if(search) return search;
     else return NULL;
+}
+
+int AVL_getBalanceFactor(BinaryTree* binaryTree){
+    int left = binaryTree->left ? binaryTree->left->height+1 : 0;
+    int right = binaryTree->right ? binaryTree->right->height+1 : 0;
+    return (left - right);
+}
+
+int AVL_isBalanced(BinaryTree* binaryTree){
+    int balanceFactor = AVL_getBalanceFactor(binaryTree);
+    return ((-1 <= balanceFactor) && (balanceFactor <= 1));
+}
+
+BinaryTree* AVL_rotate_left(BinaryTree* binaryTree){
+    BinaryTree* subTreeRoot = NULL;
+    
+    if(binaryTree != NULL && binaryTree->right != NULL){
+        subTreeRoot = binaryTree->right;
+        binaryTree->right = subTreeRoot->left;
+        subTreeRoot->left = binaryTree;
+    }
+    
+    return subTreeRoot;
+}
+
+BinaryTree* AVL_rotate_right(BinaryTree* binaryTree){
+    BinaryTree* subTreeRoot = NULL;
+    
+    if(binaryTree != NULL && binaryTree->left != NULL){
+        subTreeRoot = binaryTree->left;
+        binaryTree->left = subTreeRoot->right;
+        subTreeRoot->right = binaryTree;
+    }
+    
+    return subTreeRoot;
+}
+
+BinaryTree* AVL_rotate(BinaryTree* binaryTree){
+
+    BinaryTree* child = NULL;
+    
+    if(AVL_getBalanceFactor(binaryTree)==2){
+        child = binaryTree->left;
+        if(AVL_getBalanceFactor(child)== -1){
+            binaryTree->left = AVL_rotate_left(child);
+        }
+        binaryTree = AVL_rotate_right(binaryTree);
+    }
+    else{
+        child = binaryTree->right;
+        if(AVL_getBalanceFactor(child)== 1){
+            binaryTree->right = AVL_rotate_right(child);
+        }
+        binaryTree = AVL_rotate_left(binaryTree);
+    }
+    
+    return binaryTree;
+}
+
+BinaryTree* AVL_checkBalanceFactor(BinaryTree* binaryTree, int value){
+    
+    if(binaryTree->value != value){
+        if(value < binaryTree->value)
+            binaryTree->left = AVL_checkBalanceFactor(binaryTree->left, value);
+        else
+            binaryTree->right = AVL_checkBalanceFactor(binaryTree->right, value);
+    }
+    
+    if(!AVL_isBalanced(binaryTree)){
+        binaryTree = AVL_rotate(binaryTree);
+    }
+    
+    return binaryTree;
+}
+
+BinaryTree* AVL_insertNode(BinaryTree* binaryTree, int value){
+    binaryTree = BINARYSEARCHTREE_insertNode(binaryTree, value);
+    
+    BINARYTREE_computeHeight(binaryTree);
+    
+    if(binaryTree->value != value){
+        if(value < binaryTree->value)
+            binaryTree->left = AVL_checkBalanceFactor(binaryTree->left, value);
+        else
+            binaryTree->right = AVL_checkBalanceFactor(binaryTree->right, value);
+    }
+    
+    if(!AVL_isBalanced(binaryTree)){
+        binaryTree = AVL_rotate(binaryTree);
+    }
+    
+    BINARYTREE_computeHeight(binaryTree);
+    
+    return binaryTree;
+    
 }
 
