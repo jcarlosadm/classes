@@ -360,18 +360,9 @@ BinaryTree* AVL_insertNode(BinaryTree* binaryTree, int value){
     
     BINARYTREE_computeHeight(binaryTree);
     
-    if(binaryTree->value != value){
-        if(binaryTree->left && value < binaryTree->value)
-            binaryTree->left = AVL_checkBalanceFactor(binaryTree->left, value);
-        else if(binaryTree->right && value > binaryTree->value)
-            binaryTree->right = AVL_checkBalanceFactor(binaryTree->right, value);
-    }
+    binaryTree = AVL_checkBalanceFactor(binaryTree, value);
     
-    if(!AVL_isBalanced(binaryTree)){
-        binaryTree = AVL_rotate(binaryTree);
-    }
-    
-    BINARYTREE_computeHeight(binaryTree);
+    //BINARYTREE_computeHeight(binaryTree);
     
     return binaryTree;
     
@@ -382,20 +373,13 @@ BinaryTree* AVL_deleteNode(BinaryTree* binaryTree, int value){
     
     binaryTree = BINARYSEARCHTREE_remove(binaryTree, value);
     
-    BINARYTREE_computeHeight(binaryTree);
-    
-    if(binaryTree->value != value){
-        if(binaryTree->left && value < binaryTree->value)
-            binaryTree->left = AVL_checkBalanceFactor(binaryTree->left, value);
-        else if(binaryTree->right && value > binaryTree->value)
-            binaryTree->right = AVL_checkBalanceFactor(binaryTree->right, value);
-    }
-    
-    if(!AVL_isBalanced(binaryTree)){
-        binaryTree = AVL_rotate(binaryTree);
-    }
+    if(!binaryTree) return binaryTree;
     
     BINARYTREE_computeHeight(binaryTree);
+    
+    binaryTree = AVL_checkBalanceFactor(binaryTree, value);
+    
+    //BINARYTREE_computeHeight(binaryTree);
     
     return binaryTree;
 }
