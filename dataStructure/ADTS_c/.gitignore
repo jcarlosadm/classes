@@ -1,14 +1,2 @@
-000_test.c
-000_test
-001_stack_test.c
-001_stack_test
-002_dStack_test.c
-002_dStack_test
-003_queue_test.c
-003_queue_test
-004_pqueue_test.c
-004_pqueue_test
-005_deque_test.c
-005_deque_test
 *_test
-*_test.c
+
