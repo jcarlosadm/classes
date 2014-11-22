@@ -1,7 +1,7 @@
 #include "queue.h"
 
 // 1 para true e 0 para false
-#define DINAMIC 0
+#define DINAMIC 1
 
 
 #if DINAMIC == 0
@@ -69,6 +69,7 @@ struct node{
 
 struct queue{
     Node* first;
+    Node* last;
 };
 
 Queue* QUEUE_createQueue(){
@@ -76,6 +77,7 @@ Queue* QUEUE_createQueue(){
     if(!queue) return NULL;
     
     queue->first = NULL;
+    queue->last = NULL;
     return queue;
 }
 
@@ -108,13 +110,11 @@ void QUEUE_enqueue(Queue* queue, int item){
     
     if(!(queue->first)){
         queue->first = node;
+        queue->last = node;
     }
     else{
-        Node* current = queue->first;
-        while(current->nextNode!=NULL){
-            current = current->nextNode;
-        }
-        current->nextNode = node;
+        queue->last->nextNode = node;
+        queue->last = node;
     }
 }
 
@@ -128,6 +128,8 @@ int QUEUE_dequeue(Queue* queue){
         Node* current = queue->first;
         queue->first = queue->first->nextNode;
         free(current);
+        
+        if(!queue->first) queue->last = NULL;
         return value;
     }
 }

@@ -82,6 +82,7 @@ void freeTable(Element** table, int count){
  */
 HashTable* HASHTABLE_free(HashTable* hashTable){
     freeTable(hashTable->table, 0);
+    return NULL;
 }
 
 /**
