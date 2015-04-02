@@ -1,0 +1,7 @@
+/bin/
+.project
+.classpath
+.settings
+/doc/
+file.txt
+tf.txt
