@@ -1,5 +1,8 @@
 package testJtextpane;
+
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -38,6 +41,7 @@ public class MyWindow extends JFrame implements ActionListener{
     
     private StyledDocument doc;
     private SimpleAttributeSet attr;
+    private JButton btnSave;
 
     /**
      * Launch the application.
@@ -57,6 +61,8 @@ public class MyWindow extends JFrame implements ActionListener{
                     
                     if(window == null){
                         window = new MyWindow();
+                    }else{
+                        window.addListeners();
                     }
                     
                     window.frame.setVisible(true);
@@ -74,6 +80,28 @@ public class MyWindow extends JFrame implements ActionListener{
     public MyWindow() {
         initialize();
     }
+    
+    public void addListeners(){
+        btnSave.addActionListener(new ButtonList(this));
+        // maybe repair listener of labels here, from list
+        
+        for (int index = 0; index < this.textPane.getComponentCount(); index++) {
+            Component[] comp2 = ((Container)this.textPane.getComponent(index)).getComponents();
+            for (Component comp3 : comp2) {
+                comp3.addMouseListener(new MouseAdapter() {
+                    public void mouseClicked(MouseEvent event)
+                    {
+                        try {
+                            MyWindow newwindow = new MyWindow();
+                            newwindow.frame.setVisible(true);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        }
+    }
 
     /**
      * Initialize the contents of the frame.
@@ -81,7 +109,7 @@ public class MyWindow extends JFrame implements ActionListener{
     private void initialize() {
         frame = new JFrame();
         frame.setBounds(100, 100, 450, 300);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         
         JPanel panel = new JPanel();
         frame.getContentPane().add(panel, BorderLayout.NORTH);
@@ -95,6 +123,10 @@ public class MyWindow extends JFrame implements ActionListener{
         btnClick.addActionListener(this);
         panel.add(btnClick);
         
+        btnSave = new JButton("save");
+        btnSave.addActionListener(new ButtonList(this));
+        panel.add(btnSave);
+        
         JScrollPane scrollPane = new JScrollPane();
         frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
         
@@ -103,18 +135,36 @@ public class MyWindow extends JFrame implements ActionListener{
         attr = new SimpleAttributeSet();
         scrollPane.setViewportView(textPane);
     }
+    
+    class ButtonList implements ActionListener{
+        
+        private MyWindow window = null;
+        public ButtonList(MyWindow window) {
+            this.window = window;
+        }
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            MyWindow.saveWindow(this.window);
+        }
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         String text = this.textField.getText();
         if(text!=null && !"null".equals(text) && !"".equals(text.trim())){
             JLabel label = new JLabel(text);
+            label.setName(Integer.toString(this.textPane.getCaretPosition()));
             label.setOpaque(true);
             label.setBackground(Color.gray);
             label.setBorder(BorderFactory.createLineBorder(Color.black, 1));
             
-            this.textPane.setCaretPosition(this.textPane.getDocument().getLength());
+            // this is important!!!!
+            System.out.println(this.textPane.getDocument().getLength());
+            
+            //this.textPane.setCaretPosition(this.textPane.getDocument().getLength());
+            this.textPane.setCaretPosition(this.textPane.getCaretPosition());
             this.textPane.insertComponent(label);
+            
             
             label.addMouseListener(new MouseAdapter() {
                 
@@ -138,8 +188,21 @@ public class MyWindow extends JFrame implements ActionListener{
                 e2.printStackTrace();
             }
         }
+        
         MyWindow.saveWindow(this);
         
+    }
+    
+    public void printElements(){
+        for (int index = 0; index < this.textPane.getComponentCount(); index++) {
+            Component[] comp2 = ((Container)this.textPane.getComponent(index)).getComponents();
+            for (Component comp3 : comp2) {
+                System.out.print("comp: "+((JLabel)comp3).getName()+
+                        "text "+((JLabel)comp3).getText());
+                System.out.println("("+this.textPane.viewToModel(
+                        this.textPane.getComponent(index).getLocation())+")");
+            }
+        }
     }
     
     public static MyWindow openObject(){
@@ -164,9 +227,9 @@ public class MyWindow extends JFrame implements ActionListener{
     }
     
     public static void saveWindow(MyWindow window){
+        window.printElements();
         try
         {
-            System.out.println("sdsds");
             FileOutputStream fos = new FileOutputStream("file.txt");
             ObjectOutputStream out = new ObjectOutputStream(fos);
             out.writeObject(window);
@@ -179,5 +242,37 @@ public class MyWindow extends JFrame implements ActionListener{
             System.exit(1);
         }
     }
+    
+    static class LabelFactory{
+        public static JLabel getLabel(String text, MyWindow window){
+            JLabel label = new JLabel(text);
+            label.setOpaque(true);
+            label.setBackground(Color.gray);
+            label.setBorder(BorderFactory.createLineBorder(Color.black, 1));
+            
+            window.textPane.setCaretPosition(window.textPane.getDocument().getLength());
+            window.textPane.insertComponent(label);
+            
+            label.addMouseListener(new MouseAdapter() {
+                
+                public void mouseClicked(MouseEvent event)
+                {
+                    //String text = ((JLabel)event.getSource()).getText();
+                    //JOptionPane.showMessageDialog(MyWindow.this, text, "Information", JOptionPane.INFORMATION_MESSAGE);
+                    try {
+                        MyWindow newwindow = new MyWindow();
+                        newwindow.frame.setVisible(true);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                
+            });
+            
+            return label;
+        }
+    }
 
 }
+
+
