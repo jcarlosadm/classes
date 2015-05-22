@@ -17,9 +17,4 @@ public class Circle extends Shape {
     public void draw() {
         drawApi.drawCircle(this.x, this.y, this.radius);
     }
-
-    @Override
-    public void switchColor(DrawApi drawApi) {
-        this.drawApi = drawApi;
-    }
 }

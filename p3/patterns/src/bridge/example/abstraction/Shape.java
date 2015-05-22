@@ -12,5 +12,7 @@ public abstract class Shape {
     
     public abstract void draw();
     
-    public abstract void switchColor(DrawApi drawApi);
+    public void switchColor(DrawApi drawApi){
+        this.drawApi = drawApi;
+    }
 }
