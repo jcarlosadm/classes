@@ -15,9 +15,7 @@ public class BridgePatternDemo {
         Shape circle = new Circle(100, 100, 10, new RedShape());
         
         circle.draw();
-        
         circle.switchColor(new GreenShape());
-        
         circle.draw();
     }
 }
