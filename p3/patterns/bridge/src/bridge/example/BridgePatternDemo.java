@@ -7,7 +7,6 @@ import bridge.example.implementation.RedShape;
 
 /**
  * http://www.tutorialspoint.com/design_pattern/bridge_pattern.htm
- *
  */
 public class BridgePatternDemo {
 
