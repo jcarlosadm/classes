@@ -1,6 +1,6 @@
 package bridge.example.abstraction;
 
-import bridge.example.implement.DrawApi;
+import bridge.example.implementation.DrawApi;
 
 public class Square extends Shape{
 

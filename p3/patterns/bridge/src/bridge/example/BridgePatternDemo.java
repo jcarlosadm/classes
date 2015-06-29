@@ -2,8 +2,8 @@ package bridge.example;
 
 import bridge.example.abstraction.Circle;
 import bridge.example.abstraction.Shape;
-import bridge.example.implement.GreenShape;
-import bridge.example.implement.RedShape;
+import bridge.example.implementation.GreenShape;
+import bridge.example.implementation.RedShape;
 
 /**
  * http://www.tutorialspoint.com/design_pattern/bridge_pattern.htm

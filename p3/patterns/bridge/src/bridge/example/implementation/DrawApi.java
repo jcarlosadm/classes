@@ -1,4 +1,4 @@
-package bridge.example.implement;
+package bridge.example.implementation;
 
 public interface DrawApi {
 
