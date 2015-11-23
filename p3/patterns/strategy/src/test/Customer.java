@@ -23,7 +23,6 @@ public class Customer {
     public void printBill(){
         NumberFormat formatter = new DecimalFormat("#0.00");
         System.out.println("Total due: $ " + formatter.format(this.strategy.sum(drinks)));
-        drinks.clear();
     }
     
     public void setStrategy(BillingStrategy strategy){

@@ -12,8 +12,6 @@ public class Test {
         a.printBill();
         
         a.setStrategy(new HappyHourStrategy());
-        a.add(1.2, 1);
-        a.add(2.3, 4);
         a.printBill();
     }
 }
