@@ -3,11 +3,11 @@ package memento;
 public class Memento {
     private final String state;
     
-    public Memento(String stateToSave) {
+    protected Memento(String stateToSave) {
         this.state = stateToSave;
     }
     
-    public String getSavedState(){
+    protected String getSavedState(){
         return this.state;
     }
 }
