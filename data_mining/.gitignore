@@ -148,3 +148,4 @@ vignettes/*.pdf
 
 *.csv
 *.RData
+*.json
